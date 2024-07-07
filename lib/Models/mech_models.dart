@@ -33,7 +33,7 @@ class MechModels {
       userName: json['name'],
       token: json['token'] ?? '',
       password: json['password'],
-      isEmail: json['isEamil'], // make it correct after words
+      isEmail: json['isEmail'], // make it correct after words
       isMech: json['isMech'],
       isShop: json['isShop'],
     );

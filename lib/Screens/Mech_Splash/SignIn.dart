@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:helpmech/Screens/Mech_Splash/SignUp.dart';
 import 'package:helpmech/Services/authServices.dart';
 import 'package:helpmech/main.dart';
 
@@ -133,6 +134,10 @@ class _MechSignInState extends State<MechSignIn> {
                       GestureDetector(
                         onTap: () {
                           // Navigate to the sign-up page
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Signup()));
                         },
                         child: const Text(
                           ' Sign Up',

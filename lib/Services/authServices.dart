@@ -58,7 +58,7 @@ class Authservices {
           });
     } catch (e) {
       print('Error during sign-up: $e');
-      Fluttertoast.showToast(msg: 'Sign-up failed. Please try again.');
+      Fluttertoast.showToast(msg: '$e');
     }
   }
 
@@ -94,6 +94,9 @@ class Authservices {
         print('Shop Details Status Code: ${res1.statusCode}');
         print('Shop Details Response Body: ${res1.body}');
 
+        if (res1.statusCode == 400) {
+          Navigator.pushReplacementNamed(context, Routes.mechHome);
+        }
         // Step 3: Update Provider with received data
         var userProvider = Provider.of<MechProvider>(context, listen: false);
         SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -115,6 +118,43 @@ class Authservices {
       // Step 5: Handle exceptions
       print('Error during token validation: $e');
       Fluttertoast.showToast(msg: 'Token validation failed. Please try again.');
+    }
+  }
+
+  static void mechSignUp(String userName, String email, String password,
+      BuildContext context) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse('https://helpmech-backend.onrender.com/mech/signup'),
+        body: jsonEncode({
+          'name': userName,
+          'email': email,
+          'password': password,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      print(res.statusCode);
+      print(res.body);
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () async {
+          var userProvider = Provider.of<MechProvider>(context, listen: false);
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          userProvider.setUser(res.body);
+          preferences.setString('token', userProvider.mechUser.token);
+          preferences.setBool('mech', true);
+          Navigator.pushReplacementNamed(context, Routes.mechHome);
+        },
+        onFail: () {},
+      );
+    } catch (e) {
+      print('Error during sign-up: $e');
+      Fluttertoast.showToast(msg: 'Sign-up failed. Please try again.');
     }
   }
 }

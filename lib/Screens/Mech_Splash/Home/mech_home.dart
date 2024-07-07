@@ -1,12 +1,11 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:helpmech/Routes/routes.dart';
 import 'package:helpmech/Screens/Mech_Splash/Home/register_page.dart';
 import 'package:helpmech/Services/Provider/mech_provider.dart';
 import 'package:helpmech/Services/Provider/shop_provider.dart';
 import 'package:helpmech/Utils/app_images.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MechHome extends StatefulWidget {
   const MechHome({super.key});
@@ -18,11 +17,8 @@ class MechHome extends StatefulWidget {
 class _MechHomeState extends State<MechHome> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
-
-  String? token;
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +84,34 @@ class _MechHomeState extends State<MechHome> {
                           color: Colors.black26,
                           height: 5,
                         ),
-                        SizedBox(height: 15),
-                        Expanded(child: Text('Hello')),
+                        SizedBox(height: 35),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  var mechProvider = Provider.of<MechProvider>(
+                                      context,
+                                      listen: false);
+                                  mechProvider.clearUser();
+                                  Navigator.pushReplacementNamed(
+                                      context, Routes.selectScreen);
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.logout),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text('LogOut')
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                         Container(
                           height: kTextTabBarHeight,
                           child: Row(
@@ -213,9 +235,11 @@ class _MechHomeState extends State<MechHome> {
                   ),
                 ];
               },
-              body: Provider.of<MechProvider>(context).mechUser.isShop
-                  ? buildRegistedWiget()
-                  : buildRegisterWiget(),
+              body: SingleChildScrollView(
+                child: Provider.of<MechProvider>(context).mechUser.isShop
+                    ? buildRegisteredWidget()
+                    : buildRegisterWidget(),
+              ),
             ),
           ),
           Padding(
@@ -232,7 +256,7 @@ class _MechHomeState extends State<MechHome> {
     );
   }
 
-  Widget buildRegistedWiget() {
+  Widget buildRegisteredWidget() {
     var shopDetails =
         Provider.of<ShopProvider>(context, listen: true).shopModel;
     return Padding(
@@ -259,19 +283,19 @@ class _MechHomeState extends State<MechHome> {
               child: Column(
                 children: [
                   Text(
-                    'Shop Name :- ${shopDetails.shopName}',
+                    'Shop Name: ${shopDetails.shopName}',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'Shop Owner :- ${shopDetails.ownerName}',
+                    'Shop Owner: ${shopDetails.ownerName}',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'location : - ${shopDetails.location} ${shopDetails.pincode}',
+                    'Location: ${shopDetails.location} ${shopDetails.pincode}',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'Phone Number :- ${shopDetails.phoneNumber}',
+                    'Phone Number: ${shopDetails.phoneNumber}',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -308,7 +332,7 @@ class _MechHomeState extends State<MechHome> {
     );
   }
 
-  Widget buildRegisterWiget() {
+  Widget buildRegisterWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
